@@ -1,0 +1,11 @@
+
+#divAdLeft{width: 120px; line-height:30px; position: fixed; overflow:hidden; left:0px !important;}
+#divAdRight{width: 120px; line-height:30px; position: fixed;overflow:hidden;right:0px !important;}
+#divAdLeft img,#divAdRight img{ width:120px}
+#divBannerFloatLeft{
+    width: 120px; line-height:30px; position: fixed; overflow:hidden; left:0px !important;
+}
+#divBannerFloatRight{
+    width: 120px; line-height:30px; position: fixed;overflow:hidden;right:0px !important;
+}
+#divBannerFloatLeft img, #divBannerFloatRight img{ width:120px}
