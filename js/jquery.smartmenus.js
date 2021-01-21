@@ -1,13 +1,3 @@
-/*!
- * SmartMenus jQuery Plugin - v1.0.0 - January 27, 2016
- * http://www.smartmenus.org/
- *
- * Copyright Vasil Dinkov, Vadikom Web Ltd.
- * http://vadikom.com
- *
- * Licensed MIT
- */
-
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
 		// AMD
@@ -33,8 +23,6 @@
 	function initMouseDetection(disable) {
 		var eNS = '.smartmenus_mouse';
 		if (!mouseDetectionEnabled && !disable) {
-			// if we get two consecutive mousemoves within 2 pixels from each other and within 300ms, we assume a real mouse/cursor is present
-			// in practice, this seems like impossible to trick unintentianally with a real mouse and a pretty safe detection on touch devices (even with older browsers that do not support touch events)
 			var firstTime = true,
 				lastMove = null;
 			$(document).bind(getEventsNS([
@@ -45,7 +33,7 @@
 							deltaY = Math.abs(lastMove.y - thisMove.y);
 	 					if ((deltaX > 0 || deltaY > 0) && deltaX <= 2 && deltaY <= 2 && thisMove.timeStamp - lastMove.timeStamp <= 300) {
 							mouse = true;
-							// if this is the first check after page load, check if we are not over some item by chance and call the mouseenter handler if yes
+							
 							if (firstTime) {
 								var $a = $(e.target).closest('a');
 								if ($a.is('a')) {
@@ -169,7 +157,6 @@
 							['touchstart', $.proxy(this.docTouchStart, this)],
 							['touchmove', $.proxy(this.docTouchMove, this)],
 							['touchend', $.proxy(this.docTouchEnd, this)],
-							// for Opera Mobile < 11.5, webOS browser, etc. we'll check click too
 							['click', $.proxy(this.docClick, this)]
 						], eNS));
 					}
@@ -496,8 +483,7 @@
 					}
 					// try to activate the item and show the sub
 					this.itemActivate($a);
-					// if "itemActivate" showed the sub, prevent the click so that the link is not loaded
-					// if it couldn't show it, then the sub menus are disabled with an !important declaration (e.g. via mobile styles) so let the link get loaded
+					
 					if ($sub.is(':visible')) {
 						this.focusActivated = true;
 						return false;
@@ -610,13 +596,10 @@
 					clearTimeout(this.showTimeout);
 					this.showTimeout = 0;
 				}
-				// hide all subs
-				// if it's a popup, this.visibleSubMenus[0] is the root UL
 				var level = this.opts.isPopup ? 1 : 0;
 				for (var i = this.visibleSubMenus.length - 1; i >= level; i--) {
 					this.menuHide(this.visibleSubMenus[i]);
 				}
-				// hide root if it's popup
 				if (this.opts.isPopup) {
 					this.$root.stop(true, true);
 					if (this.$root.is(':visible')) {
@@ -625,7 +608,7 @@
 						} else {
 							this.$root.hide(this.opts.hideDuration);
 						}
-						// remove IE iframe shim
+					
 						if (this.$root.dataSM('ie-shim')) {
 							this.$root.dataSM('ie-shim').remove();
 						}
@@ -635,7 +618,6 @@
 				this.visibleSubMenus = [];
 				this.clickActivated = false;
 				this.focusActivated = false;
-				// reset z-index increment
 				this.zIndexInc = 0;
 				this.$root.triggerHandler('hideAll.smapi');
 			},
@@ -657,19 +639,15 @@
 			},
 			menuInit: function($ul) {
 				if (!$ul.dataSM('in-mega')) {
-					// mark UL's in mega drop downs (if any) so we can neglect them
 					if ($ul.hasClass('mega-menu')) {
 						$ul.find('ul').dataSM('in-mega', true);
 					}
-					// get level (much faster than, for example, using parentsUntil)
 					var level = 2,
 						par = $ul[0];
 					while ((par = par.parentNode.parentNode) != this.$root[0]) {
 						level++;
 					}
-					// cache stuff for quick access
 					var $a = $ul.prevAll('a').eq(-1);
-					// if the link is nested (e.g. in a heading)
 					if (!$a.length) {
 						$a = $ul.prevAll().find('a').eq(-1);
 					}
@@ -677,7 +655,6 @@
 					$ul.dataSM('parent-a', $a)
 						.dataSM('level', level)
 						.parent().dataSM('sub', $ul);
-					// accessibility
 					var aId = $a.attr('id') || this.accessIdPrefix + (++this.idInc),
 						ulId = $ul.attr('id') || this.accessIdPrefix + (++this.idInc);
 					$a.attr({
@@ -693,7 +670,6 @@
 						'aria-labelledby': aId,
 						'aria-expanded': 'false'
 					});
-					// add sub indicator to parent item
 					if (this.opts.subIndicators) {
 						$a[this.opts.subIndicatorsPos](this.$subArrow.clone());
 					}
@@ -743,8 +719,6 @@
 							y += winY - absY;
 						}
 					}
-					// do we need scrolling?
-					// 0.49 used for better precision when dealing with float values
 					if (horizontalParent && (absY + subH > winY + winH + 0.49 || absY < winY) || !horizontalParent && subH > winH + 0.49) {
 						var self = this;
 						if (!$sub.dataSM('scroll-arrows')) {
@@ -763,12 +737,10 @@
 								.insertAfter($sub)
 							);
 						}
-						// bind scroll events and save scroll data for this sub
 						var eNS = '.smartmenus_scroll';
 						$sub.dataSM('scroll', {
 								y: this.cssTransforms3d ? 0 : y - itemH,
 								step: 1,
-								// cache stuff for faster recalcs later
 								itemH: itemH,
 								subH: subH,
 								arrowDownH: this.getHeight($sub.dataSM('scroll-arrows').eq(1))
@@ -780,8 +752,6 @@
 							], eNS))
 							.dataSM('scroll-arrows').css({ top: 'auto', left: '0', marginLeft: x + (parseInt($sub.css('border-left-width')) || 0), width: subW - (parseInt($sub.css('border-left-width')) || 0) - (parseInt($sub.css('border-right-width')) || 0), zIndex: $sub.css('z-index') })
 								.eq(horizontalParent && this.opts.bottomToTopSubMenus ? 0 : 1).show();
-						// when a menu tree is fixed positioned we allow scrolling via touch too
-						// since there is no other way to access such long sub menus if no mouse is present
 						if (this.isFixed()) {
 							$sub.css({ 'touch-action': 'none', '-ms-touch-action': 'none' })
 								.bind(getEventsNS([
@@ -793,7 +763,6 @@
 					}
 				}
 				$sub.css({ top: 'auto', left: '0', marginLeft: x, marginTop: y - itemH });
-				// IE iframe shim
 				this.menuIframeShim($sub);
 				if ($sub.dataSM('ie-shim')) {
 					$sub.dataSM('ie-shim').css({ zIndex: $sub.css('z-index'), width: subW, height: subH, marginLeft: x, marginTop: y - itemH });
@@ -814,18 +783,16 @@
 				} else {
 					diff = step || (once || !this.opts.scrollAccelerate ? this.opts.scrollStep : Math.floor(data.step));
 				}
-				// hide any visible deeper level sub menus
 				var level = $sub.dataSM('level');
 				if (this.activatedItems[level - 1] && this.activatedItems[level - 1].dataSM('sub') && this.activatedItems[level - 1].dataSM('sub').is(':visible')) {
 					this.menuHideSubMenus(level - 1);
 				}
 				data.y = data.up && end <= data.y || !data.up && end >= data.y ? data.y : (Math.abs(end - data.y) > diff ? data.y + (data.up ? diff : -diff) : end);
 				$sub.add($sub.dataSM('ie-shim')).css(this.cssTransforms3d ? { '-webkit-transform': 'translate3d(0, ' + data.y + 'px, 0)', transform: 'translate3d(0, ' + data.y + 'px, 0)' } : { marginTop: data.y });
-				// show opposite arrow if appropriate
+			
 				if (mouse && (data.up && data.y > data.downEnd || !data.up && data.y < data.upEnd)) {
 					$arrows.eq(data.up ? 1 : 0).show();
 				}
-				// if we've reached the end
 				if (data.y == end) {
 					if (mouse) {
 						$arrows.eq(data.up ? 0 : 1).hide();
@@ -892,20 +859,16 @@
 				e = e.originalEvent;
 				if (isTouchEvent(e)) {
 					var touchPoint = this.getTouchPoint(e);
-					// neglect event if we touched a visible deeper level sub menu
 					if (this.getClosestMenu(touchPoint.target) == $sub[0]) {
 						var data = $sub.dataSM('scroll');
 						if (/(start|down)$/i.test(e.type)) {
 							if (this.menuScrollStop($sub)) {
-								// if we were scrolling, just stop and don't activate any link on the first touch
 								e.preventDefault();
 								this.$touchScrollingSub = $sub;
 							} else {
 								this.$touchScrollingSub = null;
 							}
-							// update scroll data since the user might have zoomed, etc.
 							this.menuScrollRefreshData($sub);
-							// extend it with the touch properties
 							$.extend(data, {
 								touchStartY: touchPoint.pageY,
 								touchStartTime: e.timeStamp
@@ -915,7 +878,6 @@
 							if (prevY !== undefined && prevY != touchPoint.pageY) {
 								this.$touchScrollingSub = $sub;
 								var up = prevY < touchPoint.pageY;
-								// changed direction? reset...
 								if (data.up !== undefined && data.up != up) {
 									$.extend(data, {
 										touchStartY: touchPoint.pageY,
@@ -929,7 +891,7 @@
 								this.menuScroll($sub, true, Math.abs(touchPoint.pageY - prevY));
 							}
 							e.preventDefault();
-						} else { // touchend/pointerup
+						} else { 
 							if (data.touchY !== undefined) {
 								if (data.momentum = Math.pow(Math.abs(touchPoint.pageY - data.touchStartY) / (e.timeStamp - data.touchStartTime), 2) * 15) {
 									this.menuScrollStop($sub);
@@ -955,7 +917,7 @@
 				$sub.dataSM('shown-before', true)
 					.stop(true, true);
 				if (!$sub.is(':visible')) {
-					// highlight parent item
+			
 					var $a = $sub.dataSM('parent-a');
 					if (this.opts.keepHighlighted || this.isCollapsible()) {
 						$a.addClass('highlighted');
@@ -963,9 +925,8 @@
 					if (this.isCollapsible()) {
 						$sub.removeClass('sm-nowrap').css({ zIndex: '', width: 'auto', minWidth: '', maxWidth: '', top: '', left: '', marginLeft: '', marginTop: '' });
 					} else {
-						// set z-index
 						$sub.css('z-index', this.zIndexInc = (this.zIndexInc || this.getStartZIndex()) + 1);
-						// min/max-width fix - no way to rely purely on CSS as all UL's are nested
+						
 						if (this.opts.subMenusMinWidth || this.opts.subMenusMaxWidth) {
 							$sub.css({ width: 'auto', minWidth: '', maxWidth: '' }).addClass('sm-nowrap');
 							if (this.opts.subMenusMinWidth) {
@@ -980,16 +941,14 @@
 							}
 						}
 						this.menuPosition($sub);
-						// insert IE iframe shim
 						if ($sub.dataSM('ie-shim')) {
 							$sub.dataSM('ie-shim').insertBefore($sub);
 						}
 					}
 					var complete = function() {
-						// fix: "overflow: hidden;" is not reset on animation complete in jQuery < 1.9.0 in Chrome when global "box-sizing: border-box;" is used
+						
 						$sub.css('overflow', '');
 					};
-					// if sub is collapsible (mobile view)
 					if (this.isCollapsible()) {
 						if (this.opts.collapsibleShowFunction) {
 							this.opts.collapsibleShowFunction.call(this, $sub, complete);
@@ -1003,13 +962,11 @@
 							$sub.show(this.opts.showDuration, complete);
 						}
 					}
-					// accessibility
 					$a.attr('aria-expanded', 'true');
 					$sub.attr({
 						'aria-expanded': 'true',
 						'aria-hidden': 'false'
 					});
-					// store sub menu in visible array
 					this.visibleSubMenus.push($sub);
 					this.$root.triggerHandler('show.smapi', $sub[0]);
 				}
@@ -1123,10 +1080,8 @@
 					}
 					return;
 				}
-				// hide sub menus on resize - on mobile do it only on orientation change
 				if (!('onorientationchange' in window) || e.type == 'orientationchange') {
 					var isCollapsible = this.isCollapsible();
-					// if it was collapsible before resize and still is, don't do it
 					if (!(this.wasCollapsible && isCollapsible)) { 
 						if (this.activatedItems.length) {
 							this.activatedItems[this.activatedItems.length - 1][0].blur();
@@ -1170,44 +1125,42 @@
 
 	// default settings
 	$.fn.smartmenus.defaults = {
-		isPopup:		false,		// is this a popup menu (can be shown via the popupShow/popupHide methods) or a permanent menu bar
-		mainMenuSubOffsetX:	0,		// pixels offset from default position
-		mainMenuSubOffsetY:	0,		// pixels offset from default position
-		subMenusSubOffsetX:	0,		// pixels offset from default position
-		subMenusSubOffsetY:	0,		// pixels offset from default position
-		subMenusMinWidth:	'10em',		// min-width for the sub menus (any CSS unit) - if set, the fixed width set in CSS will be ignored
-		subMenusMaxWidth:	'20em',		// max-width for the sub menus (any CSS unit) - if set, the fixed width set in CSS will be ignored
-		subIndicators: 		true,		// create sub menu indicators - creates a SPAN and inserts it in the A
-		subIndicatorsPos: 	'prepend',	// position of the SPAN relative to the menu item content ('prepend', 'append')
-		subIndicatorsText:	'+',		// [optionally] add text in the SPAN (e.g. '+') (you may want to check the CSS for the sub indicators too)
-		scrollStep: 		30,		// pixels step when scrolling long sub menus that do not fit in the viewport height
-		scrollAccelerate:	true,		// accelerate scrolling or use a fixed step
-		showTimeout:		250,		// timeout before showing the sub menus
-		hideTimeout:		500,		// timeout before hiding the sub menus
-		showDuration:		0,		// duration for show animation - set to 0 for no animation - matters only if showFunction:null
-		showFunction:		null,		// custom function to use when showing a sub menu (the default is the jQuery 'show')
-							// don't forget to call complete() at the end of whatever you do
-							// e.g.: function($ul, complete) { $ul.fadeIn(250, complete); }
-		hideDuration:		0,		// duration for hide animation - set to 0 for no animation - matters only if hideFunction:null
-		hideFunction:		function($ul, complete) { $ul.fadeOut(200, complete); },	// custom function to use when hiding a sub menu (the default is the jQuery 'hide')
-							// don't forget to call complete() at the end of whatever you do
-							// e.g.: function($ul, complete) { $ul.fadeOut(250, complete); }
-		collapsibleShowDuration:0,		// duration for show animation for collapsible sub menus - matters only if collapsibleShowFunction:null
-		collapsibleShowFunction:function($ul, complete) { $ul.slideDown(200, complete); },	// custom function to use when showing a collapsible sub menu
-							// (i.e. when mobile styles are used to make the sub menus collapsible)
-		collapsibleHideDuration:0,		// duration for hide animation for collapsible sub menus - matters only if collapsibleHideFunction:null
-		collapsibleHideFunction:function($ul, complete) { $ul.slideUp(200, complete); },	// custom function to use when hiding a collapsible sub menu
-							// (i.e. when mobile styles are used to make the sub menus collapsible)
-		showOnClick:		false,		// show the first-level sub menus onclick instead of onmouseover (i.e. mimic desktop app menus) (matters only for mouse input)
-		hideOnClick:		true,		// hide the sub menus on click/tap anywhere on the page
-		noMouseOver:		false,		// disable sub menus activation onmouseover (i.e. behave like in touch mode - use just mouse clicks) (matters only for mouse input)
-		keepInViewport:		true,		// reposition the sub menus if needed to make sure they always appear inside the viewport
-		keepHighlighted:	true,		// keep all ancestor items of the current sub menu highlighted (adds the 'highlighted' class to the A's)
-		markCurrentItem:	false,		// automatically add the 'current' class to the A element of the item linking to the current URL
-		markCurrentTree:	true,		// add the 'current' class also to the A elements of all ancestor items of the current item
-		rightToLeftSubMenus:	false,		// right to left display of the sub menus (check the CSS for the sub indicators' position)
-		bottomToTopSubMenus:	false,		// bottom to top display of the sub menus
-		overlapControlsInIE:	true		// make sure sub menus appear on top of special OS controls in IE (i.e. SELECT, OBJECT, EMBED, etc.)
+		isPopup:		false,		
+		mainMenuSubOffsetX:	0,		
+		mainMenuSubOffsetY:	0,		
+		subMenusSubOffsetX:	0,		
+		subMenusSubOffsetY:	0,		
+		subMenusMinWidth:	'10em',		
+		subMenusMaxWidth:	'20em',		
+		subIndicators: 		true,		
+		subIndicatorsPos: 	'prepend',	
+		subIndicatorsText:	'+',		
+		scrollStep: 		30,		
+		scrollAccelerate:	true,		
+		showTimeout:		250,		
+		hideTimeout:		500,		
+		showDuration:		0,		
+		showFunction:		null,		
+							
+		hideDuration:		0,		
+		hideFunction:		function($ul, complete) { $ul.fadeOut(200, complete); },	
+							
+		collapsibleShowDuration:0,		
+		collapsibleShowFunction:function($ul, complete) { $ul.slideDown(200, complete); },
+							
+		collapsibleHideDuration:0,	
+		collapsibleHideFunction:function($ul, complete) { $ul.slideUp(200, complete); },	
+						
+		showOnClick:		false,		
+		hideOnClick:		true,	
+		noMouseOver:		false,	
+		keepInViewport:		true,		
+		keepHighlighted:	true,		
+		markCurrentItem:	false,		
+		markCurrentTree:	true,		
+		rightToLeftSubMenus:	false,		
+		bottomToTopSubMenus:	false,		
+		overlapControlsInIE:	true		
 	};
 
 	return $;

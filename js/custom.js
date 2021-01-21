@@ -1,13 +1,4 @@
 /** 
-  * Template Name: Daily Shop
-  * Version: 1.0  
-  * Template Scripts
-  * Author: MarkUps
-  * Author URI: http://www.markups.io/
-
-  Custom JS
-  
-
   1. CARTBOX
   2. TOOLTIP
   3. PRODUCT VIEW SLIDER 
@@ -92,9 +83,7 @@ jQuery(function($){
             slidesToScroll: 1
           }
         }
-        // You can unslick at a given breakpoint now by adding:
-        // settings: "unslick"
-        // instead of a settings object
+       
       ]
     }); 
 
@@ -133,9 +122,7 @@ jQuery(function($){
               slidesToScroll: 1
             }
           }
-          // You can unslick at a given breakpoint now by adding:
-          // settings: "unslick"
-          // instead of a settings object
+          
         ]
     });
     
@@ -172,9 +159,7 @@ jQuery(function($){
               slidesToScroll: 1
             }
           }
-          // You can unslick at a given breakpoint now by adding:
-          // settings: "unslick"
-          // instead of a settings object
+         
         ]
     });
 
@@ -227,9 +212,7 @@ jQuery(function($){
               slidesToScroll: 1
             }
           }
-          // You can unslick at a given breakpoint now by adding:
-          // settings: "unslick"
-          // instead of a settings object
+         
         ]
     });
 
@@ -349,9 +332,7 @@ jQuery(function($){
             slidesToScroll: 1
           }
         }
-        // You can unslick at a given breakpoint now by adding:
-        // settings: "unslick"
-        // instead of a settings object
+        
       ]
     }); 
     

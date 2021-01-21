@@ -1,9 +1,3 @@
-/*
- You probably do not need to edit this at all.
-
- Add some SmartMenus required styles not covered in Bootstrap 3's default CSS.
- These are theme independent and should work with any Bootstrap 3 theme mod.
-*/
 /* sub menus arrows on desktop */
 .navbar-nav:not(.sm-collapsible) ul .caret {
 	position: absolute;
