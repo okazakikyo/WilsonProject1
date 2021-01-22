@@ -10,11 +10,11 @@ Project title: Wilson sporting goods website
 
 3 collaborators:
 
-             Trần Văn Tính (minhchi2494@gmail.com) Student1281649
+             Trần Văn Tính (anhdaotranth@gmail.com) Student1281649
 
-             Lý Vĩnh Phú (trungthanh28072001@gmail.com) Student1280935
+             Lý Vĩnh Phú (okazakikyo123@gmail.com) Student1280935
              
-             Dương Đinh Phúc (thinhminhnguyen96@gmail.com) Student1280927
+             Dương Đinh Phúc (dinhphuc231002@gmail.com) Student1280927
 ============================
 
 github report link: https://github.com/okazakikyo/WilsonProject1/tree/main/Document
