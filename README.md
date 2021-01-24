@@ -21,7 +21,7 @@ github report link: https://github.com/okazakikyo/WilsonProject1/tree/main/Docum
 
 ============================
 
-eProject published at https://okazakikyo.github.io/WilsonProject1/
+eProject published at https://okazakikyo.github.io/WilsonProject1/.
 
 ============================
 
